@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 
 interface Word {
   id: string;
@@ -44,7 +45,6 @@ export default function LearnedPilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ progressId }),
       });
-      // Refresh the list
       fetchWords();
     } catch (error) {
       console.error('Failed to demote:', error);
@@ -53,32 +53,39 @@ export default function LearnedPilePage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <p className="text-[var(--text-secondary)]">Loading...</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-md mx-auto">
+    <main className="min-h-screen p-4">
+      <div className="max-w-md mx-auto pt-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <Link href="/dashboard" className="text-green-600 hover:underline">
+        <div className="flex items-center justify-between mb-8">
+          <Link 
+            href="/dashboard" 
+            className="text-[var(--learned-green-text)] hover:text-[var(--learned-green)] transition-colors"
+          >
             ← Back
           </Link>
-          <div className="text-center">
-            <h1 className="text-lg font-semibold text-gray-700">Learned</h1>
-            <p className="text-2xl font-bold text-green-600">★{words.length}★</p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-medium text-[var(--text-secondary)]">Learned</h1>
+            <DarkModeToggle />
           </div>
-          <div className="w-8"></div>
+        </div>
+
+        {/* Count */}
+        <div className="text-center mb-8">
+          <span className="text-4xl font-bold text-[var(--learned-green)]">★{words.length}★</span>
         </div>
 
         {/* Gallery */}
         {words.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No words learned yet!</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="text-[var(--text-secondary)]">No words learned yet!</p>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
               Study some words to fill this gallery
             </p>
           </div>
@@ -102,15 +109,15 @@ function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) 
   const [showEnglish, setShowEnglish] = useState(false);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
       <div 
         onClick={() => setShowEnglish(!showEnglish)}
         className="p-4 text-center cursor-pointer min-h-[100px] flex flex-col justify-center"
       >
-        <p className="text-lg font-medium text-gray-900">
+        <p className="text-lg font-medium text-[var(--text-primary)]">
           {showEnglish ? item.word.english : item.word.ukrainian}
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-[var(--text-secondary)] mt-1 opacity-60">
           {showEnglish ? 'Tap for Ukrainian' : 'Tap for English'}
         </p>
       </div>
@@ -120,7 +127,7 @@ function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) 
           e.stopPropagation();
           onDemote();
         }}
-        className="w-full py-2 text-xs text-amber-600 hover:bg-amber-50 border-t border-gray-100"
+        className="w-full py-2 text-xs text-[var(--studying-amber-text)] hover:bg-[var(--studying-amber-light)] border-t border-[var(--border-color)] transition-colors"
       >
         Move to Studying
       </button>

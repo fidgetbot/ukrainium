@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 async function getUser() {
   const sessionToken = (await cookies()).get("session")?.value;
@@ -62,34 +63,37 @@ export default async function Dashboard() {
   const counts = await getPileCounts(user.id);
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-md mx-auto">
+    <main className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 pt-4">
-          <h1 className="text-2xl font-bold text-gray-900">Ukrainium</h1>
-          <form action="/logout" method="post">
-            <button
-              type="submit"
-              className="text-sm text-gray-600 hover:text-gray-900"
-            >
-              Logout
-            </button>
-          </form>
+        <div className="flex items-center justify-between mb-10">
+          <h1 className="logo text-3xl">Ukrainium</h1>
+          <div className="flex items-center gap-3">
+            <DarkModeToggle />
+            <form action="/api/logout" method="post">
+              <button
+                type="submit"
+                className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* Piles */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* New Pile */}
           <Link
             href="/piles/new"
-            className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+            className="card block bg-[var(--new-blue-light)] rounded-2xl shadow-md border-0 p-6 hover:shadow-lg"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-blue-600">New</h2>
-                <p className="text-sm text-gray-500 mt-1">Words to learn</p>
+                <h2 className="text-xl font-semibold text-[var(--new-blue-text)]">New</h2>
+                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words to learn</p>
               </div>
-              <div className="bg-blue-100 text-blue-700 rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
+              <div className="bg-[var(--new-blue)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 {counts.newCount}
               </div>
             </div>
@@ -98,14 +102,14 @@ export default async function Dashboard() {
           {/* Studying Pile */}
           <Link
             href="/piles/studying"
-            className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+            className="card block bg-[var(--studying-amber-light)] rounded-2xl shadow-md border-0 p-6 hover:shadow-lg"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-amber-600">Studying</h2>
-                <p className="text-sm text-gray-500 mt-1">In progress</p>
+                <h2 className="text-xl font-semibold text-[var(--studying-amber-text)]">Studying</h2>
+                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">In progress</p>
               </div>
-              <div className="bg-amber-100 text-amber-700 rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
+              <div className="bg-[var(--studying-amber)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 {counts.studyingCount}
               </div>
             </div>
@@ -114,14 +118,14 @@ export default async function Dashboard() {
           {/* Learned Pile */}
           <Link
             href="/piles/learned"
-            className="block bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
+            className="card block bg-[var(--learned-green-light)] rounded-2xl shadow-md border-0 p-6 hover:shadow-lg"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-green-600">Learned</h2>
-                <p className="text-sm text-gray-500 mt-1">Words you know</p>
+                <h2 className="text-xl font-semibold text-[var(--learned-green-text)]">Learned</h2>
+                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words you know</p>
               </div>
-              <div className="bg-green-100 text-green-700 rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
+              <div className="bg-[var(--learned-green)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 ★{counts.learnedCount}
               </div>
             </div>
@@ -130,11 +134,11 @@ export default async function Dashboard() {
 
         {/* Next Pack Info */}
         {counts.newCount === 0 && counts.studyingCount === 0 && (
-          <div className="mt-8 text-center">
-            <p className="text-gray-600">Ready for the next pack?</p>
+          <div className="mt-10 text-center">
+            <p className="text-[var(--text-secondary)]">Ready for the next pack?</p>
             <Link
               href="/next-pack"
-              className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="inline-block mt-3 px-5 py-3 bg-[var(--new-blue)] text-white rounded-xl font-medium hover:bg-[var(--new-blue-text)] transition-colors"
             >
               Load Next Pack
             </Link>

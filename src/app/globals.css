@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Pastel light theme */
+  --bg-primary: #faf9f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fefdfb;
+  --text-primary: #4a4a4a;
+  --text-secondary: #7a7a7a;
+  --border-color: #e8e4e0;
+  --shadow-color: rgba(0, 0, 0, 0.04);
+  
+  /* Pastel pile colors */
+  --new-blue: #a8c4d9;
+  --new-blue-light: #c8dae9;
+  --new-blue-text: #3d5a6c;
+  --studying-amber: #e8d4a8;
+  --studying-amber-light: #f2e4c4;
+  --studying-amber-text: #6b5a3d;
+  --learned-green: #a8d4b8;
+  --learned-green-light: #c8e8d4;
+  --learned-green-text: #3d6c4d;
+}
+
+[data-theme="dark"] {
+  /* Dark mode */
+  --bg-primary: #1a1a1a;
+  --bg-card: #2a2a2a;
+  --bg-card-hover: #333333;
+  --text-primary: #e8e4e0;
+  --text-secondary: #a8a4a0;
+  --border-color: #3a3a3a;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  
+  --new-blue: #5a7a8c;
+  --new-blue-light: #7a9aac;
+  --new-blue-text: #c8dae9;
+  --studying-amber: #8c7a5a;
+  --studying-amber-light: #ac9a7a;
+  --studying-amber-text: #f2e4c4;
+  --learned-green: #5a8c6a;
+  --learned-green-light: #7aac8a;
+  --learned-green-text: #c8e8d4;
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Smooth card transitions */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Button transitions */
+button, .btn {
+  transition: all 0.2s ease;
+}
+
+/* Page content centered vertically */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Logo styling */
+.logo {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--new-blue) 0%, var(--learned-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth theme toggle */
+.theme-transition {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

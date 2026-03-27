@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 
 interface Word {
   id: string;
@@ -20,6 +21,7 @@ export default function StudyingPilePage() {
   const [progress, setProgress] = useState<Progress | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMoving, setIsMoving] = useState(false);
   const router = useRouter();
 
   async function fetchNextCard() {
@@ -31,7 +33,6 @@ export default function StudyingPilePage() {
           setProgress(data.progress);
           setIsFlipped(false);
         } else {
-          // No more cards in studying
           router.push('/dashboard');
         }
       }
@@ -48,6 +49,7 @@ export default function StudyingPilePage() {
 
   async function handleKeep() {
     if (!progress) return;
+    setIsMoving(true);
     
     try {
       await fetch('/api/piles/studying/keep', {
@@ -55,14 +57,17 @@ export default function StudyingPilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ progressId: progress.id }),
       });
-      await fetchNextCard();
+      fetchNextCard();
     } catch (error) {
       console.error('Failed to keep card:', error);
+    } finally {
+      setIsMoving(false);
     }
   }
 
   async function handleLearn() {
     if (!progress) return;
+    setIsMoving(true);
     
     try {
       await fetch('/api/piles/studying/learn', {
@@ -70,26 +75,28 @@ export default function StudyingPilePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ progressId: progress.id }),
       });
-      await fetchNextCard();
+      fetchNextCard();
     } catch (error) {
       console.error('Failed to learn card:', error);
+    } finally {
+      setIsMoving(false);
     }
   }
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <p className="text-gray-600">Loading...</p>
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <p className="text-[var(--text-secondary)]">Loading...</p>
       </main>
     );
   }
 
   if (!progress) {
     return (
-      <main className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-md mx-auto text-center pt-20">
-          <p className="text-gray-600 mb-4">No cards in studying pile!</p>
-          <Link href="/dashboard" className="text-blue-600 hover:underline">
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-[var(--text-secondary)] mb-4">No cards in studying pile!</p>
+          <Link href="/dashboard" className="text-[var(--studying-amber-text)] hover:underline">
             Back to Dashboard
           </Link>
         </div>
@@ -98,54 +105,60 @@ export default function StudyingPilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-md mx-auto">
+    <main className="min-h-screen flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <Link href="/dashboard" className="text-amber-600 hover:underline">
+        <div className="flex items-center justify-between mb-8">
+          <Link 
+            href="/dashboard" 
+            className="text-[var(--studying-amber-text)] hover:text-[var(--studying-amber)] transition-colors"
+          >
             ← Back
           </Link>
-          <h1 className="text-lg font-semibold text-gray-700">Studying</h1>
-          <div className="w-8"></div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-medium text-[var(--text-secondary)]">Studying</h1>
+            <DarkModeToggle />
+          </div>
         </div>
 
-        {/* Flashcard */}
+        {/* Flashcard with flip */}
         <div 
           onClick={() => setIsFlipped(!isFlipped)}
-          className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden cursor-pointer min-h-[300px] flex flex-col"
+          className="card bg-[var(--bg-card)] rounded-3xl shadow-lg border border-[var(--border-color)] overflow-hidden mb-6 cursor-pointer"
         >
-          <div className="p-8 text-center flex-1 flex flex-col justify-center">
+          <div className="p-10 text-center min-h-[240px] flex flex-col justify-center">
             {!isFlipped ? (
               <>
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
                   {progress.word.ukrainian}
                 </h2>
-                <p className="text-gray-400 text-sm">Tap to flip</p>
+                <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-4">Tap to see English</p>
               </>
             ) : (
               <>
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
                   {progress.word.ukrainian}
                 </h2>
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <p className="text-2xl text-gray-700">{progress.word.english}</p>
-                </div>
+                <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto my-4"></div>
+                <p className="text-2xl text-[var(--text-secondary)]">{progress.word.english}</p>
               </>
             )}
           </div>
         </div>
 
         {/* Action buttons */}
-        <div className="mt-6 space-y-3">
+        <div className="space-y-3">
           <button
             onClick={handleKeep}
-            className="w-full py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition-colors"
+            disabled={isMoving}
+            className="w-full py-4 bg-[var(--studying-amber)] text-white rounded-xl font-semibold hover:bg-[var(--studying-amber-text)] disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
           >
             Keep in Studying
           </button>
           <button
             onClick={handleLearn}
-            className="w-full py-4 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors"
+            disabled={isMoving}
+            className="w-full py-4 bg-[var(--learned-green)] text-white rounded-xl font-semibold hover:bg-[var(--learned-green-text)] disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
           >
             Move to Learned
           </button>
