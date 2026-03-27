@@ -20,22 +20,31 @@ interface Progress {
 export default function NewPilePage() {
   const [progress, setProgress] = useState<Progress | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMoving, setIsMoving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function fetchNextCard() {
     try {
       const response = await fetch('/api/piles/new/next');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.progress) {
-          setProgress(data.progress);
-        } else {
-          router.push('/dashboard');
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push('/login');
+          return;
         }
+        throw new Error('Failed to fetch');
+      }
+      
+      const data = await response.json();
+      console.log('API response:', data); // Debug logging
+      
+      if (data.progress) {
+        setProgress(data.progress);
+      } else {
+        setProgress(null);
       }
     } catch (error) {
       console.error('Failed to fetch card:', error);
+      setError('Failed to load card');
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +56,6 @@ export default function NewPilePage() {
 
   async function handleMove() {
     if (!progress) return;
-    setIsMoving(true);
     
     try {
       const response = await fetch('/api/piles/new/drop', {
@@ -57,12 +65,15 @@ export default function NewPilePage() {
       });
 
       if (response.ok) {
-        fetchNextCard();
+        // Fetch next card instead of refreshing
+        setIsLoading(true);
+        await fetchNextCard();
+      } else if (response.status === 401) {
+        router.push('/login');
       }
     } catch (error) {
       console.error('Failed to move card:', error);
-    } finally {
-      setIsMoving(false);
+      setError('Failed to move card');
     }
   }
 
@@ -74,11 +85,30 @@ export default function NewPilePage() {
     );
   }
 
+  if (error) {
+    return (
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button 
+            onClick={() => { setError(null); setIsLoading(true); fetchNextCard(); }}
+            className="text-[var(--new-blue)] hover:underline"
+          >
+            Retry
+          </button>
+        </div>
+      </main>
+    );
+  }
+
   if (!progress) {
     return (
       <main className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-[var(--text-secondary)] mb-4">No new words!</p>
+          <p className="text-sm text-[var(--text-secondary)] opacity-60 mb-4">
+            You&apos;ve reviewed all cards in this pack.
+          </p>
           <Link href="/dashboard" className="text-[var(--new-blue)] hover:underline">
             Back to Dashboard
           </Link>
@@ -125,10 +155,9 @@ export default function NewPilePage() {
         {/* Action button */}
         <button
           onClick={handleMove}
-          disabled={isMoving}
-          className="w-full py-4 bg-[var(--new-blue)] text-white rounded-xl font-semibold hover:bg-[var(--new-blue-text)] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+          className="w-full py-4 bg-[var(--new-blue)] text-white rounded-xl font-semibold hover:bg-[var(--new-blue-text)] transition-all shadow-md hover:shadow-lg"
         >
-          {isMoving ? 'Moving...' : 'Move to Studying'}
+          Move to Studying
         </button>
       </div>
     </main>
