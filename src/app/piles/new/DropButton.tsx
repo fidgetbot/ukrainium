@@ -33,7 +33,7 @@ export function DropButton({ progressId }: { progressId: string }) {
       disabled={isLoading}
       className="w-full py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
     >
-      {isLoading ? "Moving..." : "Drop to Studying"}
+      {isLoading ? "Moving..." : "Move to Studying"}
     </button>
   );
 }

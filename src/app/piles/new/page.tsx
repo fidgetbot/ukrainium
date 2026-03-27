@@ -58,14 +58,12 @@ export default async function NewPilePage() {
 function Flashcard({ word, progressId }: { word: any; progressId: string }) {
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-      {/* Card content with flip */}
+      {/* Card content - both languages shown simultaneously */}
       <div className="p-8 text-center min-h-[300px] flex flex-col justify-center">
-        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+        <h2 className="text-4xl font-bold text-gray-900 mb-2">
           {word.ukrainian}
         </h2>
-        <p className="text-gray-400 text-sm">Tap to flip</p>
         
-        {/* Flip side - shows English */}
         <div className="mt-8 pt-8 border-t border-gray-100">
           <p className="text-2xl text-gray-700">{word.english}</p>
         </div>
