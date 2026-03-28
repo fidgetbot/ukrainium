@@ -66,8 +66,8 @@ export default async function Dashboard() {
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
-          <h1 className="logo text-3xl">Ukrainium</h1>
+        <div className="flex items-center justify-between mb-6 pt-2">
+          <h1 className="logo text-5xl">Ukrainium</h1>
           <div className="flex items-center gap-3">
             <DarkModeToggle />
             <form action="/api/logout" method="post">
@@ -91,7 +91,6 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="pile-label text-2xl text-[var(--new-blue-text)]">New</h2>
-                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words to learn</p>
               </div>
               <div className="bg-[var(--new-blue)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 {counts.newCount}
@@ -107,7 +106,6 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="pile-label text-2xl text-[var(--studying-amber-text)]">Studying</h2>
-                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">In progress</p>
               </div>
               <div className="bg-[var(--studying-amber)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 {counts.studyingCount}
@@ -123,7 +121,6 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="pile-label text-2xl text-[var(--learned-green-text)]">Learned</h2>
-                <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words you know</p>
               </div>
               <div className="bg-[var(--learned-green)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
                 ★{counts.learnedCount}

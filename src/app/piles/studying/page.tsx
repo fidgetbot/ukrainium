@@ -130,17 +130,17 @@ export default function StudyingPilePage() {
             {!isFlipped ? (
               <>
                 <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
-                  {progress.word.ukrainian}
+                  {progress.word.english}
                 </h2>
-                <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-4">Tap to see English</p>
+                <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-4">Tap for Ukrainian</p>
               </>
             ) : (
               <>
                 <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
-                  {progress.word.ukrainian}
+                  {progress.word.english}
                 </h2>
                 <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto my-4"></div>
-                <p className="text-2xl text-[var(--text-secondary)]">{progress.word.english}</p>
+                <p className="text-2xl text-[var(--text-secondary)]">{progress.word.ukrainian}</p>
               </>
             )}
           </div>

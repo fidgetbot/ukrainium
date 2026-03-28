@@ -106,19 +106,19 @@ export default function LearnedPilePage() {
 }
 
 function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) {
-  const [showEnglish, setShowEnglish] = useState(false);
+  const [showUkrainian, setShowUkrainian] = useState(false);
 
   return (
     <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
       <div 
-        onClick={() => setShowEnglish(!showEnglish)}
+        onClick={() => setShowUkrainian(!showUkrainian)}
         className="p-4 text-center cursor-pointer min-h-[100px] flex flex-col justify-center"
       >
         <p className="text-lg font-medium text-[var(--text-primary)]">
-          {showEnglish ? item.word.english : item.word.ukrainian}
+          {showUkrainian ? item.word.ukrainian : item.word.english}
         </p>
         <p className="text-xs text-[var(--text-secondary)] mt-1 opacity-60">
-          {showEnglish ? 'Tap for Ukrainian' : 'Tap for English'}
+          {showUkrainian ? 'Tap for English' : 'Tap for Ukrainian'}
         </p>
       </div>
       
