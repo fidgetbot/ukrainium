@@ -106,20 +106,27 @@ export default function LearnedPilePage() {
 }
 
 function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) {
-  const [showUkrainian, setShowUkrainian] = useState(false);
+  const [flipped, setFlipped] = useState(false);
 
   return (
     <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
       <div 
-        onClick={() => setShowUkrainian(!showUkrainian)}
+        onClick={() => setFlipped(!flipped)}
         className="p-4 text-center cursor-pointer min-h-[100px] flex flex-col justify-center"
       >
-        <p className="text-lg font-medium text-[var(--text-primary)]">
-          {showUkrainian ? item.word.ukrainian : item.word.english}
-        </p>
-        <p className="text-xs text-[var(--text-secondary)] mt-1 opacity-60">
-          {showUkrainian ? 'Tap for English' : 'Tap for Ukrainian'}
-        </p>
+        {!flipped ? (
+          <>
+            <p className="text-2xl font-bold text-[var(--text-primary)]">{item.word.ukrainian}</p>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{item.word.english}</p>
+            <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on English</p>
+          </>
+        ) : (
+          <>
+            <p className="text-2xl font-bold text-[var(--text-primary)]">{item.word.english}</p>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{item.word.ukrainian}</p>
+            <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on Ukrainian</p>
+          </>
+        )}
       </div>
       
       <button
