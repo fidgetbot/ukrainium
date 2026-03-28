@@ -106,7 +106,7 @@ export default async function Dashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-[var(--studying-amber-text)]">Studying</h2>
+                <h2 className="pile-label text-2xl text-[var(--studying-amber-text)]">Studying</h2>
                 <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">In progress</p>
               </div>
               <div className="bg-[var(--studying-amber)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
@@ -122,7 +122,7 @@ export default async function Dashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-[var(--learned-green-text)]">Learned</h2>
+                <h2 className="pile-label text-2xl text-[var(--learned-green-text)]">Learned</h2>
                 <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words you know</p>
               </div>
               <div className="bg-[var(--learned-green)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
