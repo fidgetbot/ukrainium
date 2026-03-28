@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
   id: string;
@@ -129,16 +130,16 @@ export default function StudyingPilePage() {
           <div className="p-10 text-center min-h-[240px] flex flex-col justify-center">
             {!isFlipped ? (
               <>
-                <p className="text-xl text-[var(--text-secondary)] opacity-70">{progress.word.english}</p>
+                <p className="text-xl text-[var(--text-secondary)] opacity-70">{transformForDisplay(progress.word.english)}</p>
                 <p className="text-xs text-[var(--text-secondary)] opacity-50 mt-6">Tap to reveal Ukrainian</p>
               </>
             ) : (
               <>
                 <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
-                  {progress.word.ukrainian}
+                  {transformForDisplay(progress.word.ukrainian)}
                 </h2>
                 <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto my-4"></div>
-                <p className="text-xl text-[var(--text-secondary)] opacity-70">{progress.word.english}</p>
+                <p className="text-xl text-[var(--text-secondary)] opacity-70">{transformForDisplay(progress.word.english)}</p>
                 <p className="text-xs text-[var(--text-secondary)] opacity-50 mt-4">Tap to hide Ukrainian</p>
               </>
             )}

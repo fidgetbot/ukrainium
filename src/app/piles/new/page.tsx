@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
   id: string;
@@ -139,7 +140,7 @@ export default function NewPilePage() {
           <div className="p-10 text-center">
             {/* Ukrainian */}
             <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-6">
-              {progress.word.ukrainian}
+              {transformForDisplay(progress.word.ukrainian)}
             </h2>
             
             {/* Divider */}
@@ -147,7 +148,7 @@ export default function NewPilePage() {
             
             {/* English */}
             <p className="text-2xl text-[var(--text-secondary)]">
-              {progress.word.english}
+              {transformForDisplay(progress.word.english)}
             </p>
           </div>
         </div>

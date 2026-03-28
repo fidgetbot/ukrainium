@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
   id: string;
@@ -116,14 +117,14 @@ function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) 
       >
         {!flipped ? (
           <>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{item.word.ukrainian}</p>
-            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{item.word.english}</p>
+            <p className="text-2xl font-bold text-[var(--text-primary)]">{transformForDisplay(item.word.ukrainian)}</p>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{transformForDisplay(item.word.english)}</p>
             <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on English</p>
           </>
         ) : (
           <>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{item.word.english}</p>
-            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{item.word.ukrainian}</p>
+            <p className="text-2xl font-bold text-[var(--text-primary)]">{transformForDisplay(item.word.english)}</p>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{transformForDisplay(item.word.ukrainian)}</p>
             <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on Ukrainian</p>
           </>
         )}
