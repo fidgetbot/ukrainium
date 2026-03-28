@@ -78,15 +78,21 @@ button, .btn {
   align-items: center;
 }
 
-/* Logo styling */
+/* Logo styling with Racing Sans One */
 .logo {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-weight: 600;
+  font-family: 'Racing Sans One', cursive;
+  font-weight: 400;
   letter-spacing: 0.02em;
-  background: linear-gradient(135deg, var(--new-blue) 0%, var(--learned-green) 100%);
+  background: linear-gradient(135deg, var(--new-blue) 0%, var(--learned-green) 100%));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Pile labels with Carter One */
+.pile-label {
+  font-family: 'Carter One', cursive;
+  font-weight: 400;
 }
 
 /* Smooth theme toggle */

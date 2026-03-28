@@ -90,7 +90,7 @@ export default async function Dashboard() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-[var(--new-blue-text)]">New</h2>
+                <h2 className="pile-label text-2xl text-[var(--new-blue-text)]">New</h2>
                 <p className="text-sm text-[var(--text-secondary)] mt-1 opacity-80">Words to learn</p>
               </div>
               <div className="bg-[var(--new-blue)] text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-xl shadow-sm">
