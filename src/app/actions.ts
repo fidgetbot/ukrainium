@@ -50,7 +50,7 @@ export async function login(formData: FormData) {
 
 async function createSession(userId: string) {
   const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
   await prisma.session.create({
     data: { userId, token, expiresAt },
