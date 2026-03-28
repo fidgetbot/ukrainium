@@ -50,7 +50,8 @@ export async function login(formData: FormData) {
 
 async function createSession(userId: string) {
   const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+  const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds
+  const expiresAt = new Date(Date.now() + maxAge * 1000);
 
   await prisma.session.create({
     data: { userId, token, expiresAt },
@@ -58,9 +59,11 @@ async function createSession(userId: string) {
 
   (await cookies()).set("session", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: true, // Always secure for PWA
     sameSite: "lax",
     expires: expiresAt,
+    maxAge: maxAge,
+    path: "/",
   });
 }
 
