@@ -10,6 +10,7 @@ interface Word {
   id: string;
   ukrainian: string;
   english: string;
+  transcription: string | null;
   frequencyRank: number;
 }
 
@@ -139,9 +140,16 @@ export default function NewPilePage() {
         <div className="card bg-[var(--bg-card)] rounded-3xl shadow-lg border border-[var(--border-color)] overflow-hidden mb-6">
           <div className="p-10 text-center">
             {/* Ukrainian */}
-            <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-6">
+            <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-2">
               {transformForDisplay(progress.word.ukrainian)}
             </h2>
+            
+            {/* Transcription */}
+            {progress.word.transcription && (
+              <p className="text-sm text-[var(--text-secondary)] opacity-60 mb-4">
+                [{progress.word.transcription}]
+              </p>
+            )}
             
             {/* Divider */}
             <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto mb-6"></div>
