@@ -30,6 +30,7 @@ model Word {
   id             String   @id @default(uuid())
   ukrainian      String
   english        String
+  transcription  String?
   stressPosition Int?
   frequencyRank  Int      @unique
   packNumber     Int
