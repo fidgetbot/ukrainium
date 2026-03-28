@@ -129,16 +129,18 @@ export default async function Dashboard() {
           </Link>
         </div>
 
-        {/* Next Pack Info */}
-        {counts.newCount === 0 && counts.studyingCount === 0 && (
+        {/* Next Pack Info - show when New pile is empty */}
+        {counts.newCount === 0 && (
           <div className="mt-10 text-center">
             <p className="text-[var(--text-secondary)]">Ready for the next pack?</p>
-            <Link
-              href="/next-pack"
-              className="inline-block mt-3 px-5 py-3 bg-[var(--new-blue)] text-white rounded-xl font-medium hover:bg-[var(--new-blue-text)] transition-colors"
-            >
-              Load Next Pack
-            </Link>
+            <form action="/api/next-pack" method="post" className="inline-block mt-3">
+              <button
+                type="submit"
+                className="px-5 py-3 bg-[var(--new-blue)] text-white rounded-xl font-medium hover:bg-[var(--new-blue-text)] transition-colors"
+              >
+                Load Next Pack
+              </button>
+            </form>
           </div>
         )}
       </div>
