@@ -1,20 +1,46 @@
-"use client";
+'use client';
 
 import { useState } from "react";
-import { login } from "../actions";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  async function handleSubmit(formData: FormData) {
-    const result = await login(formData);
-    if (result?.error) {
-      setError(result.error);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Store token in localStorage for PWA persistence
+        if (data.token) {
+          localStorage.setItem('ukrainium-session', data.token);
+        }
+        router.push('/dashboard');
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch {
+      setError('Login failed');
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
         <div className="p-3 bg-red-100 text-red-700 rounded-lg text-sm">
           {error}
@@ -49,9 +75,10 @@ export function LoginForm() {
 
       <button
         type="submit"
-        className="w-full py-3 bg-[#0057B7] text-white rounded-xl font-semibold hover:bg-[#004494] transition-colors shadow-md"
+        disabled={isLoading}
+        className="w-full py-3 bg-[#0057B7] text-white rounded-xl font-semibold hover:bg-[#004494] transition-colors shadow-md disabled:opacity-50"
       >
-        Login
+        {isLoading ? 'Logging in...' : 'Login'}
       </button>
     </form>
   );

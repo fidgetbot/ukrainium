@@ -10,6 +10,7 @@ interface Word {
   id: string;
   ukrainian: string;
   english: string;
+  transcription: string | null;
   frequencyRank: number;
 }
 
@@ -135,9 +136,14 @@ export default function StudyingPilePage() {
               </>
             ) : (
               <>
-                <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">
+                <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-2">
                   {transformForDisplay(progress.word.ukrainian)}
                 </h2>
+                {progress.word.transcription && (
+                  <p className="text-sm text-[var(--text-secondary)] opacity-60 mb-4">
+                    [{progress.word.transcription}]
+                  </p>
+                )}
                 <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto my-4"></div>
                 <p className="text-xl text-[var(--text-secondary)] opacity-70">{transformForDisplay(progress.word.english)}</p>
                 <p className="text-xs text-[var(--text-secondary)] opacity-50 mt-4">Tap to hide Ukrainian</p>

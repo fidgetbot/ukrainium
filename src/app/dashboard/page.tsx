@@ -1,66 +1,78 @@
-import { prisma } from "@/lib/db";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { DarkModeToggle } from "@/components/DarkModeToggle";
+'use client';
 
-async function getUser() {
-  const sessionToken = (await cookies()).get("session")?.value;
-  if (!sessionToken) return null;
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
 
-  const session = await prisma.session.findUnique({
-    where: { token: sessionToken },
-    include: { user: true },
-  });
-
-  if (!session || session.expiresAt < new Date()) return null;
-  return session.user;
+interface PileCounts {
+  newCount: number;
+  studyingCount: number;
+  learnedCount: number;
 }
 
-async function getPileCounts(userId: string) {
-  const [newCount, studyingCount, learnedCount] = await Promise.all([
-    prisma.userWordProgress.count({
-      where: { userId, pile: "new" },
-    }),
-    prisma.userWordProgress.count({
-      where: { userId, pile: "studying" },
-    }),
-    prisma.userWordProgress.count({
-      where: { userId, pile: "learned" },
-    }),
-  ]);
+export default function Dashboard() {
+  const [counts, setCounts] = useState<PileCounts | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
-  return { newCount, studyingCount, learnedCount };
-}
+  useEffect(() => {
+    // Check for session token (cookie or localStorage)
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/user');
+        if (!response.ok) {
+          // Try localStorage fallback
+          const localToken = localStorage.getItem('ukrainium-session');
+          if (localToken) {
+            // Try to restore session
+            const restoreRes = await fetch('/api/restore-session', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token: localToken }),
+            });
+            if (!restoreRes.ok) {
+              localStorage.removeItem('ukrainium-session');
+              router.push('/login');
+              return;
+            }
+          } else {
+            router.push('/login');
+            return;
+          }
+        }
+        
+        const data = await response.json();
+        if (data.counts) {
+          setCounts(data.counts);
+        }
+      } catch {
+        router.push('/login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    checkSession();
+  }, [router]);
 
-export default async function Dashboard() {
-  const user = await getUser();
-  if (!user) redirect("/login");
+  const handleLogout = async () => {
+    localStorage.removeItem('ukrainium-session');
+    await fetch('/api/logout', { method: 'POST' });
+    router.push('/login');
+  };
 
-  // Initialize user progress if none exists
-  const existingProgress = await prisma.userWordProgress.findFirst({
-    where: { userId: user.id },
-  });
-
-  if (!existingProgress) {
-    // Get first 12 words (pack 1) and create progress entries
-    const firstPackWords = await prisma.word.findMany({
-      where: { packNumber: 1 },
-      orderBy: { frequencyRank: "asc" },
-    });
-
-    for (const word of firstPackWords) {
-      await prisma.userWordProgress.create({
-        data: {
-          userId: user.id,
-          wordId: word.id,
-          pile: "new",
-        },
-      });
-    }
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center p-4">
+        <p className="text-[var(--text-secondary)]">Loading...</p>
+      </main>
+    );
   }
 
-  const counts = await getPileCounts(user.id);
+  if (!counts) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
@@ -70,14 +82,12 @@ export default async function Dashboard() {
           <h1 className="logo text-5xl">Ukrainium</h1>
           <div className="flex items-center gap-3">
             <DarkModeToggle />
-            <form action="/api/logout" method="post">
-              <button
-                type="submit"
-                className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-              >
-                Logout
-              </button>
-            </form>
+            <button
+              onClick={handleLogout}
+              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              Logout
+            </button>
           </div>
         </div>
 
@@ -128,21 +138,6 @@ export default async function Dashboard() {
             </div>
           </Link>
         </div>
-
-        {/* Next Pack Info - show when New pile is empty */}
-        {counts.newCount === 0 && (
-          <div className="mt-10 text-center">
-            <p className="text-[var(--text-secondary)]">Ready for the next pack?</p>
-            <form action="/api/next-pack" method="post" className="inline-block mt-3">
-              <button
-                type="submit"
-                className="px-5 py-3 bg-[var(--new-blue)] text-white rounded-xl font-medium hover:bg-[var(--new-blue-text)] transition-colors"
-              >
-                Load Next Pack
-              </button>
-            </form>
-          </div>
-        )}
       </div>
     </main>
   );
