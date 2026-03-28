@@ -80,10 +80,10 @@ button, .btn {
 
 /* Logo styling with Racing Sans One */
 .logo {
-  font-family: 'Racing Sans One', cursive;
+  font-family: var(--font-racing), 'Racing Sans One', cursive;
   font-weight: 400;
   letter-spacing: 0.02em;
-  background: linear-gradient(135deg, var(--new-blue) 0%, var(--learned-green) 100%));
+  background: linear-gradient(135deg, var(--new-blue) 0%, var(--learned-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -91,7 +91,7 @@ button, .btn {
 
 /* Pile labels with Carter One */
 .pile-label {
-  font-family: 'Carter One', cursive;
+  font-family: var(--font-carter), 'Carter One', cursive;
   font-weight: 400;
 }
 
