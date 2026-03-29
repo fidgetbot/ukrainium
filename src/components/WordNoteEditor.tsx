@@ -55,9 +55,13 @@ export function WordNoteEditor({ progressId, note, className = '', onSaved }: Wo
     setIsEditing(false);
   }
 
+  function stopPropagation(event: React.SyntheticEvent) {
+    event.stopPropagation();
+  }
+
   if (isEditing) {
     return (
-      <div className={className}>
+      <div className={className} onClick={stopPropagation} onMouseDown={stopPropagation}>
         <textarea
           value={draft}
           onChange={(e) => setDraft(e.target.value.slice(0, MAX_NOTE_LENGTH))}
@@ -100,7 +104,7 @@ export function WordNoteEditor({ progressId, note, className = '', onSaved }: Wo
   }
 
   return (
-    <div className={className}>
+    <div className={className} onClick={stopPropagation} onMouseDown={stopPropagation}>
       {note ? (
         <>
           <p className="text-sm text-[var(--text-secondary)] italic">{note}</p>
