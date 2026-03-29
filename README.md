@@ -112,7 +112,24 @@ git push
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run migrate:deploy` - Deploy database migrations
+- `npm run db:transcriptions` - Recompute and backfill word transcriptions
 - `npx prisma studio` - Open Prisma database GUI
+
+## Updating Transcriptions
+
+If the transcription rules change, update `prisma/seed-transcriptions.ts` and rerun:
+
+```bash
+npm run db:transcriptions
+```
+
+To update the Railway production database after deploy, run the same backfill script in Railway's environment so it uses the production `DATABASE_URL`:
+
+```bash
+railway run npm run db:transcriptions
+```
+
+This updates the stored transcription values in PostgreSQL directly. No schema migration is needed.
 
 ## Features
 
