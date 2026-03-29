@@ -120,13 +120,16 @@ git push
 If the transcription rules change, update `prisma/seed-transcriptions.ts` and rerun:
 
 ```bash
+python3 -m venv .venv-stress
+source .venv-stress/bin/activate
+pip install ukrainian-word-stress
 npm run db:transcriptions
 ```
 
 To update the Railway production database after deploy, run the same backfill script in Railway's environment so it uses the production `DATABASE_URL`:
 
 ```bash
-railway run npm run db:transcriptions
+railway run --service ukrainium npm run db:transcriptions
 ```
 
 This updates the stored transcription values in PostgreSQL directly. No schema migration is needed.
