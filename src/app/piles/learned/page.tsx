@@ -9,6 +9,7 @@ interface Word {
   id: string;
   ukrainian: string;
   english: string;
+  transcription: string | null;
   frequencyRank: number;
 }
 
@@ -63,7 +64,6 @@ export default function LearnedPilePage() {
   return (
     <main className="min-h-screen p-4">
       <div className="max-w-md mx-auto pt-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link 
             href="/dashboard" 
@@ -77,12 +77,10 @@ export default function LearnedPilePage() {
           </div>
         </div>
 
-        {/* Count */}
         <div className="text-center mb-8">
           <span className="text-4xl font-bold text-[var(--learned-green)]">★{words.length}★</span>
         </div>
 
-        {/* Gallery */}
         {words.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-[var(--text-secondary)]">No words learned yet!</p>
@@ -107,34 +105,24 @@ export default function LearnedPilePage() {
 }
 
 function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) {
-  const [flipped, setFlipped] = useState(false);
-
   return (
     <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
-      <div 
-        onClick={() => setFlipped(!flipped)}
-        className="p-4 text-center cursor-pointer min-h-[100px] flex flex-col justify-center"
-      >
-        {!flipped ? (
-          <>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{transformForDisplay(item.word.ukrainian)}</p>
-            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{transformForDisplay(item.word.english)}</p>
-            <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on English</p>
-          </>
-        ) : (
-          <>
-            <p className="text-2xl font-bold text-[var(--text-primary)]">{transformForDisplay(item.word.english)}</p>
-            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">{transformForDisplay(item.word.ukrainian)}</p>
-            <p className="text-xs text-[var(--text-secondary)] opacity-40 mt-2">Tap to focus on Ukrainian</p>
-          </>
+      <div className="p-4 text-center min-h-[120px] flex flex-col justify-center">
+        <p className="text-2xl font-bold text-[var(--text-primary)]">
+          {transformForDisplay(item.word.ukrainian)}
+        </p>
+        {item.word.transcription && (
+          <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
+            [{item.word.transcription}]
+          </p>
         )}
+        <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
+          {transformForDisplay(item.word.english)}
+        </p>
       </div>
       
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onDemote();
-        }}
+        onClick={onDemote}
         className="w-full py-2 text-xs text-[var(--studying-amber-text)] hover:bg-[var(--studying-amber-light)] border-t border-[var(--border-color)] transition-colors"
       >
         Move to Studying
