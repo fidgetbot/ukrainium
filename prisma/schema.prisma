@@ -46,6 +46,7 @@ model UserWordProgress {
   userId            String
   wordId            String
   pile              String   // "new", "studying", "learned"
+  note              String?
   lastReviewedAt    DateTime?
   movedToLearnedAt  DateTime?
   reviewCount       Int      @default(0)

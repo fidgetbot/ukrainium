@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { WordNoteEditor } from '@/components/WordNoteEditor';
 import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
@@ -16,6 +17,7 @@ interface Word {
 
 interface Progress {
   id: string;
+  note: string | null;
   word: Word;
 }
 
@@ -37,7 +39,6 @@ export default function NewPilePage() {
       }
       
       const data = await response.json();
-      console.log('API response:', data); // Debug logging
       
       if (data.progress) {
         setProgress(data.progress);
@@ -67,7 +68,6 @@ export default function NewPilePage() {
       });
 
       if (response.ok) {
-        // Fetch next card instead of refreshing
         setIsLoading(true);
         await fetchNextCard();
       } else if (response.status === 401) {
@@ -122,7 +122,6 @@ export default function NewPilePage() {
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link 
             href="/dashboard" 
@@ -136,32 +135,33 @@ export default function NewPilePage() {
           </div>
         </div>
 
-        {/* Card */}
         <div className="card bg-[var(--bg-card)] rounded-3xl shadow-lg border border-[var(--border-color)] overflow-hidden mb-6">
           <div className="p-10 text-center">
-            {/* Ukrainian */}
             <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-2">
               {transformForDisplay(progress.word.ukrainian)}
             </h2>
             
-            {/* Transcription */}
             {progress.word.transcription && (
               <p className="text-sm text-[var(--text-secondary)] opacity-60 mb-4">
                 [{progress.word.transcription}]
               </p>
             )}
+
+            <WordNoteEditor
+              progressId={progress.id}
+              note={progress.note}
+              className="mb-6"
+              onSaved={(note) => setProgress((current) => current ? { ...current, note } : current)}
+            />
             
-            {/* Divider */}
             <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto mb-6"></div>
             
-            {/* English */}
             <p className="text-2xl text-[var(--text-secondary)]">
               {transformForDisplay(progress.word.english)}
             </p>
           </div>
         </div>
 
-        {/* Action button */}
         <button
           onClick={handleMove}
           className="w-full py-4 bg-[var(--new-blue)] text-white rounded-xl font-semibold hover:bg-[var(--new-blue-text)] transition-all shadow-md hover:shadow-lg"

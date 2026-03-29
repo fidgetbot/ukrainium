@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { WordNoteEditor } from '@/components/WordNoteEditor';
 import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
@@ -16,6 +17,7 @@ interface Word {
 
 interface Progress {
   id: string;
+  note: string | null;
   word: Word;
 }
 
@@ -109,7 +111,6 @@ export default function StudyingPilePage() {
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link 
             href="/dashboard" 
@@ -123,7 +124,6 @@ export default function StudyingPilePage() {
           </div>
         </div>
 
-        {/* Flashcard with flip */}
         <div 
           onClick={() => setIsFlipped(!isFlipped)}
           className="card bg-[var(--bg-card)] rounded-3xl shadow-lg border border-[var(--border-color)] overflow-hidden mb-6 cursor-pointer"
@@ -144,6 +144,12 @@ export default function StudyingPilePage() {
                     [{progress.word.transcription}]
                   </p>
                 )}
+                <WordNoteEditor
+                  progressId={progress.id}
+                  note={progress.note}
+                  className="mb-4"
+                  onSaved={(note) => setProgress((current) => current ? { ...current, note } : current)}
+                />
                 <div className="w-16 h-1 bg-[var(--border-color)] rounded-full mx-auto my-4"></div>
                 <p className="text-xl text-[var(--text-secondary)] opacity-70">{transformForDisplay(progress.word.english)}</p>
                 <p className="text-xs text-[var(--text-secondary)] opacity-50 mt-4">Tap to hide Ukrainian</p>
@@ -152,7 +158,6 @@ export default function StudyingPilePage() {
           </div>
         </div>
 
-        {/* Action buttons */}
         <div className="space-y-3">
           <button
             onClick={handleKeep}

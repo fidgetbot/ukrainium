@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { WordNoteEditor } from '@/components/WordNoteEditor';
 import { transformForDisplay } from '@/lib/textTransform';
 
 interface Word {
@@ -15,6 +16,7 @@ interface Word {
 
 interface Progress {
   id: string;
+  note: string | null;
   word: Word;
 }
 
@@ -51,6 +53,10 @@ export default function LearnedPilePage() {
     } catch (error) {
       console.error('Failed to demote:', error);
     }
+  }
+
+  function handleNoteSaved(progressId: string, note: string | null) {
+    setWords((current) => current.map((item) => item.id === progressId ? { ...item, note } : item));
   }
 
   if (isLoading) {
@@ -95,6 +101,7 @@ export default function LearnedPilePage() {
                 key={item.id} 
                 item={item} 
                 onDemote={() => handleDemote(item.id)}
+                onNoteSaved={(note) => handleNoteSaved(item.id, note)}
               />
             ))}
           </div>
@@ -104,10 +111,10 @@ export default function LearnedPilePage() {
   );
 }
 
-function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) {
+function WordCard({ item, onDemote, onNoteSaved }: { item: Progress; onDemote: () => void; onNoteSaved: (note: string | null) => void }) {
   return (
     <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
-      <div className="p-4 text-center min-h-[120px] flex flex-col justify-center">
+      <div className="p-4 text-center min-h-[160px] flex flex-col justify-center">
         <p className="text-2xl font-bold text-[var(--text-primary)]">
           {transformForDisplay(item.word.ukrainian)}
         </p>
@@ -119,6 +126,12 @@ function WordCard({ item, onDemote }: { item: Progress; onDemote: () => void }) 
         <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
           {transformForDisplay(item.word.english)}
         </p>
+        <WordNoteEditor
+          progressId={item.id}
+          note={item.note}
+          className="mt-3"
+          onSaved={onNoteSaved}
+        />
       </div>
       
       <button
