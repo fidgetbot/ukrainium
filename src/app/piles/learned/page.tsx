@@ -112,26 +112,39 @@ export default function LearnedPilePage() {
 }
 
 function WordCard({ item, onDemote, onNoteSaved }: { item: Progress; onDemote: () => void; onNoteSaved: (note: string | null) => void }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div className="card bg-[var(--bg-card)] rounded-2xl shadow-md border border-[var(--border-color)] overflow-hidden">
-      <div className="p-4 text-center min-h-[160px] flex flex-col justify-center">
-        <p className="text-2xl font-bold text-[var(--text-primary)]">
-          {transformForDisplay(item.word.ukrainian)}
-        </p>
-        {item.word.transcription && (
-          <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
-            [{item.word.transcription}]
+      <div
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="p-4 text-center min-h-[160px] flex flex-col justify-center cursor-pointer"
+      >
+        {!isExpanded ? (
+          <p className="text-2xl font-bold text-[var(--text-primary)]">
+            {transformForDisplay(item.word.english)}
           </p>
+        ) : (
+          <>
+            <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
+              {transformForDisplay(item.word.english)}
+            </p>
+            <p className="text-2xl font-bold text-[var(--text-primary)] mt-2">
+              {transformForDisplay(item.word.ukrainian)}
+            </p>
+            {item.word.transcription && (
+              <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
+                [{item.word.transcription}]
+              </p>
+            )}
+            <WordNoteEditor
+              progressId={item.id}
+              note={item.note}
+              className="mt-3"
+              onSaved={onNoteSaved}
+            />
+          </>
         )}
-        <p className="text-sm text-[var(--text-secondary)] opacity-60 mt-2">
-          {transformForDisplay(item.word.english)}
-        </p>
-        <WordNoteEditor
-          progressId={item.id}
-          note={item.note}
-          className="mt-3"
-          onSaved={onNoteSaved}
-        />
       </div>
       
       <button
